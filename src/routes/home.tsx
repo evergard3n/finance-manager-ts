@@ -8,6 +8,7 @@ import ReactDOM from "react-dom"
 import {Button} from "../components/button"
 import { Subscriptions } from "./subscriptions"
 
+import { formatDistanceStrict } from "date-fns";
 
 import { Link } from "react-router-dom";
 import { TopBar } from "../components/topBar";
@@ -18,7 +19,7 @@ const SingleSubTracker: React.FC<{sub: Subscriptions}> = ({sub}) => {
             <i className="fa-solid fa-book scale-150"></i>
             <div>
                 <p>{sub.name}</p>
-                <p>{sub.date}</p>
+                <p>{formatDistanceStrict(new Date(sub.date), new Date(Date.now())) + ' left'}</p>
             </div>
         </div>
     )
