@@ -1,30 +1,23 @@
 import { Outlet } from "react-router";
-import {  NavLink } from "react-router-dom";
 
+import { NavButton } from "../components/button";
 function SideBar() {
     return (
         <div className="bg-white w-1/6 flex flex-col items-center">
 
-                <h1 className="text-2xl font-bold mt-4 -ml-16">Finance <br/> Tracker</h1>
-                <NavLink to='/' className={({ isActive, isPending }: { isActive: boolean, isPending: boolean }) => (isActive ? "bg-slate-200" : isPending ? "bg-blue-300" : "" ) + " mt-4 w-[90%] h-12 rounded-lg flex items-center pl-6"}>
-                    <div className="flex flex-row gap-2 items-center">
-                        <i className="fa-solid fa-house"></i>
-                        <p>Home</p>
-                    </div>
-                </NavLink>
-                <NavLink to='/test' className={({ isActive, isPending }: { isActive: boolean, isPending: boolean }) => (isActive ? "bg-slate-200" : isPending ? "bg-blue-300" : "" ) + " mt-4 w-[90%] h-12 rounded-lg flex items-center pl-6"}>
-                    <div className="flex flex-row gap-2 items-center">
-                    <i className="fa-solid fa-flask-vial"></i>
-                        <p>Test</p>
-                    </div>
-                </NavLink>
-                <NavLink to='/cart' className={({ isActive, isPending }: { isActive: boolean, isPending: boolean }) => (isActive ? "bg-slate-200" : isPending ? "bg-blue-300" : "" ) + " mt-4 w-[90%] h-12 rounded-lg flex items-center pl-6"}>
-                    <div className="flex flex-row gap-2 items-center">
-                    <i className="fa-solid fa-cart-shopping"></i>
-                        <p>Cart</p>
-                    </div>
-                </NavLink>
+            <h1 className="text-2xl font-bold mt-6 -ml-16">Finance <br /> Tracker</h1>
+
+            <NavButton route='/'>
+                <i className="fa-solid fa-house"></i>
+                <p>Home</p>
+            </NavButton>
             
+            <NavButton route='/subscriptions'>
+            <i className="fa-solid fa-money-bill-wave"></i>
+                    <p>Subscriptions</p>
+            </NavButton>
+            
+
         </div>
     )
 }

@@ -5,6 +5,8 @@ import Cart from "./routes/cart";
 import ErrorPage from "./routes/errorPage";
 import Home from "./routes/home";
 import { Toaster } from "sonner";
+import Subscriptions from "./routes/subscriptions";
+import { SubscriptionsProvider } from "./contexts/subscriptionsContext";
 export default function App() {
   const router = createBrowserRouter([
     {
@@ -14,7 +16,8 @@ export default function App() {
       children: [
         {
           path: "/",
-          element: <Home/>
+          element: <Home/>,
+          
         },
         {
           path: "/test",
@@ -23,15 +26,21 @@ export default function App() {
         {
           path: "/cart",
           element: <Cart/>
+        },
+        {
+          path: "/subscriptions",
+          element: <Subscriptions/>,
+          
         }
+
       ]
     }
   ]);
   
   return (
-    <div className="">
+    <SubscriptionsProvider>
       <RouterProvider router={router} />
       <Toaster/>
-    </div>
+    </SubscriptionsProvider>
   )
 }
