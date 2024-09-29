@@ -7,6 +7,8 @@ import Home from "./routes/home";
 import { Toaster } from "sonner";
 import Subscriptions from "./routes/subscriptions";
 import { SubscriptionsProvider } from "./contexts/subscriptionsContext";
+import { ToDoList } from "./routes/toDoList";
+import { TodosProvider } from "./contexts/todoContext";
 export default function App() {
   const router = createBrowserRouter([
     {
@@ -31,6 +33,10 @@ export default function App() {
           path: "/subscriptions",
           element: <Subscriptions/>,
           
+        },
+        {
+          path: "/todo",
+          element: <ToDoList/>
         }
 
       ]
@@ -38,9 +44,11 @@ export default function App() {
   ]);
   
   return (
-    <SubscriptionsProvider>
+    <TodosProvider>
+      <SubscriptionsProvider>
       <RouterProvider router={router} />
       <Toaster/>
     </SubscriptionsProvider>
+    </TodosProvider>
   )
 }

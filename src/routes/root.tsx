@@ -16,7 +16,10 @@ function SideBar() {
             <i className="fa-solid fa-money-bill-wave"></i>
                     <p>Subscriptions</p>
             </NavButton>
-            
+            <NavButton route='/todo'>
+            <i className="fa-solid fa-list"></i>
+                    <p>To-do List</p>
+            </NavButton>
 
         </div>
     )

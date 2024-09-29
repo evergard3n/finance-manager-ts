@@ -15,7 +15,7 @@ import { TopBar } from "../components/topBar";
 
 const SingleSubTracker: React.FC<{sub: Subscriptions}> = ({sub}) => {
     return (
-        <div className="w-full h-20 bg-white border border-slate-150 hover:drop-shadow-lg mb-2 flex flex-row items-center justify-start gap-8 px-8 rounded-lg transition-all duration-500 ease-in-out">
+        <div className="w-full h-20 bg-white border border-slate-150  mb-2 flex flex-row items-center justify-start gap-8 px-8 rounded-lg transition-all duration-500 ease-in-out">
             <i className="fa-solid fa-book scale-150"></i>
             <div>
                 <p>{sub.name}</p>
