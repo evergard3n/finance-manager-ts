@@ -9,7 +9,11 @@ import Subscriptions from "./routes/subscriptions";
 import { SubscriptionsProvider } from "./contexts/subscriptionsContext";
 import { ToDoList } from "./routes/toDoList";
 import { TodosProvider } from "./contexts/todoContext";
+import { useEffect } from "react";
 export default function App() {
+  useEffect(()=>{
+    console.log(import.meta.env);
+  },[])
   const router = createBrowserRouter([
     {
       path: "/",

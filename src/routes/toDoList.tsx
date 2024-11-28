@@ -5,8 +5,9 @@ import ReactDOM from "react-dom"
 import { addDocument, updateDocument } from "../db utils/firebase utils"
 import DatePicker from "react-datepicker"
 import { toast } from "sonner"
-import { format } from 'date-fns'
-import { now } from "lodash"
+import { format, compareAsc, formatDistance } from 'date-fns'
+
+import { todoArraySorter } from "../db utils/general utils"
 export interface Todo {
     task: string,
     date: string,
@@ -20,11 +21,23 @@ const SingleTodo: React.FC<{ todo: Todo }> = ({ todo }) => {
         updateDocument({ ...todo, completed: e.target.checked }, 'todo');
     }
     let formattedDate: string;
+    let outdated:boolean =false;
+    let distance:string = '';
     if(todo.date === '') {
         formattedDate = '';
     } else {
         formattedDate = format(new Date(todo.date), 'dd/MM/yyyy');
+        const currentDate = new Date(Date.now());
+        const todoDate = new Date(todo.date);
+        outdated = currentDate > todoDate;
+        distance = formatDistance(currentDate, todoDate)
     }
+    let outdatedDate: React.ReactNode = (
+        <div className="text-orange-400 border rounded-full w-1/2 text-center text-xs font-bold py-1">
+            {distance} ago
+        </div>
+    )
+    
     return (
         <li key={todo.id}>
             <div className="flex flex-row justify-center items-baseline gap-2 pl-4">
@@ -32,14 +45,14 @@ const SingleTodo: React.FC<{ todo: Todo }> = ({ todo }) => {
                 <div className="flex flex-col  w-full py-2 mb-2  bg-white  transition-all duration-150 ease-in-out font-poppins">
                     <p className={`text-lg ${todo.completed && 'line-through'}`}>{todo.task}</p>
                     {todo.details && <p className="text-sm text-slate-500">{todo.details}</p>}
-                    <p className="text-sm text-slate-500">{formattedDate === '' ? '' : `Due: ${formattedDate}`}</p>
+                    <p className="text-sm text-slate-500">{formattedDate === '' ? '' : outdated ? outdatedDate : `Due: ${formattedDate}`}</p>
 
                 </div>
             </div>
         </li>
     )
 }
-const TodoGroup: React.FC<{ group: Array<Todo>, title: string }> = ({ group, title }) => {
+export const TodoGroup: React.FC<{ group: Array<Todo>, title: string }> = ({ group, title }) => {
     const handleToggle = (e: React.ChangeEvent<HTMLInputElement>, todo: Todo) => {
         e.preventDefault();
         updateDocument({ ...todo, completed: false }, 'todo');
@@ -47,7 +60,7 @@ const TodoGroup: React.FC<{ group: Array<Todo>, title: string }> = ({ group, tit
    const [showCompleted, setShowCompleted] = useState<boolean>(false);
    let listNotCompleted: Array<React.ReactNode> = group.map((todo) => { 
     if(!todo.completed) 
-        return <SingleTodo todo={todo} />})
+        return <li key={todo.id}><SingleTodo todo={todo} /></li>})
     const listCompleted: Array<React.ReactNode> = group.map((todo) => {
         if (todo.completed)
             return (
@@ -82,6 +95,7 @@ const TodoGroup: React.FC<{ group: Array<Todo>, title: string }> = ({ group, tit
 const Todos: React.FC = () => {
     const todos = useContext(TodosContext);
     
+    
     let todayTodos: Array<Todo> = todos.filter((todo) => {
         const currentDate = new Date(Date.now());
         const todoDate = new Date(todo.date);
@@ -95,11 +109,19 @@ const Todos: React.FC = () => {
         const todoDate = new Date(todo.date);
         return todoDate.setHours(0, 0, 0, 0) > currentDate.setHours(0, 0, 0, 0);
     })
+    let outdatedTodos: Array<Todo> = todos.filter((todo)=>{
+        
+        const currentDate = new Date(Date.now());
+        const todoDate = new Date(todo.date);
+        return todoDate.setHours(0, 0, 0, 0) < currentDate.setHours(0, 0, 0, 0);
+    })
     return (
-        <div className="w-full grid grid-cols-3 gap-4">
+        <div className="w-full grid grid-cols-4 gap-4">
             <TodoGroup group={undatedTodos} title="Undated To-dos" />
-            <TodoGroup group={todayTodos} title="Today's To-dos" />
-            <TodoGroup group={futureTodos} title="Future To-dos" />
+            <TodoGroup group={todoArraySorter(todayTodos)} title="Today's To-dos" />
+            <TodoGroup group={todoArraySorter(futureTodos)} title="Future To-dos" />
+
+            <TodoGroup group={todoArraySorter(outdatedTodos)} title="Outdated To-dos" />
         </div>
     )
 }
@@ -165,7 +187,7 @@ const TodoCreatorPortal : React.FC<{setNewTodoFalse: () => void}> = ({setNewTodo
                             </div>}
                         {
                             selectedDate && !addDate ? (
-                                <p className="ml-2 border border-black px-2 rounded-full">{date.toLocaleDateString()}</p>
+                                <p className="ml-2 border border-black px-2 rounded-full">{format(date, 'dd/MM/yyyy')}</p>
                             ) : null
                         }
                     </div>
